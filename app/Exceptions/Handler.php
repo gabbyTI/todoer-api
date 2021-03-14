@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Helpers\ApiResponder;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -58,13 +59,18 @@ class Handler extends ExceptionHandler
 
             return ApiResponder::failureResponse("The model is not specified", 404);
         }
-        return parent::render($request, $exception);
-    }
 
-    //overwriting the normal validation exception
-    protected function invalidJson($request, ValidationException $exception)
-    {
-        return ApiResponder::failureResponse($exception->getMessage(),  $exception->status, $this->transformErrors($exception));
+        if ($exception instanceof AuthenticationException && $request->expectsJson()) {
+
+            return ApiResponder::failureResponse("You are not logged in", 401);
+        }
+
+        if ($exception instanceof ValidationException && $request->expectsJson()) {
+
+            return ApiResponder::failureResponse($exception->getMessage(),  $exception->status, $this->transformErrors($exception));
+        }
+
+        return parent::render($request, $exception);
     }
 
     // transform the error messages,
