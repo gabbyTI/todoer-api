@@ -17,8 +17,12 @@ Route::get('me', [MeController::class, 'getMe']);
 // Route group for authenticated users only
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('logout', [LoginController::class, 'logout']);
+    Route::post('account/delete', [LoginController::class, 'deleteAccount']);
 
     //Tasks
+    Route::get('tasks', [TaskController::class, 'index']);
+    Route::get('tasks/today', [TaskController::class, 'getTasksForToday']);
+    Route::get('tasks/completed', [TaskController::class, 'getCompletedTasks']);
     Route::post('tasks', [TaskController::class, 'store']);
     Route::post('tasks/{task}', [TaskController::class, 'update']);
     Route::post('tasks/{task}/mark', [TaskController::class, 'markAsCompleted']);
