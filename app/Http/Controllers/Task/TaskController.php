@@ -27,6 +27,13 @@ class TaskController extends Controller
         return ApiResponder::successResponse('Data Found', TaskResource::collection($tasks));
     }
 
+    public function findById(Task $task)
+    {
+        // dd($task);
+        // $task = $this->tasks->findById($task->id);
+        return ApiResponder::successResponse("Data Found", new TaskResource($task));
+    }
+
     public function getTasksForToday()
     {
         $tasks =  $this->tasks->getUserTasksForToday(auth()->id());
@@ -58,6 +65,8 @@ class TaskController extends Controller
             'task_end_date' => $request->task_end_date
         ]);
 
+        $task = $this->tasks->find($task->id);
+
         return ApiResponder::successResponse("Task saved", new TaskResource($task));
     }
 
@@ -83,7 +92,7 @@ class TaskController extends Controller
         return ApiResponder::successResponse("Task Updated", new TaskResource($task));
     }
 
-    public function markAsCompleted(Request $request, Task $task)
+    public function markTaskAsCompleted(Request $request, Task $task)
     {
         $this->authorize('update', $task);
 
