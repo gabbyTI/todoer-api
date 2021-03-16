@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TaskResource extends JsonResource
+class SubTaskResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,17 +16,11 @@ class TaskResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'task_id' => $this->task_id,
             'body' => $this->body,
             'priority' => $this->priority,
             'is_completed' => $this->is_completed,
-            'task_start_date' => $this->task_start_date,
-            'task_end_date' => $this->task_end_date,
-            'sub_task_count' => $this->subTasks->count(),
-            'sub_tasks' => SubTaskResource::collection($this->subTasks),
-            // 'create_dates' => [
-            //     'creadted_at_human' => $this->created_at->diffForHumans(),
-            //     'creadted_at' => $this->created_at,
-            // ],
+            'task_date' => $this->task_date,
         ];
     }
 }
