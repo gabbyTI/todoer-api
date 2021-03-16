@@ -73,4 +73,12 @@ class LoginController extends Controller
 
         return ApiResponder::successResponse("Logged out successfully");
     }
+
+    public function deleteAccount()
+    {
+        $user = auth()->user();
+        $this->guard()->logout();
+        $user->delete();
+        return ApiResponder::successResponse("Account deleted");
+    }
 }
