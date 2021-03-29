@@ -16,8 +16,34 @@
         GET     |       tasks                |  Get all users tasks                 | null
         GET     |       tasks/today          |  Get all users tasks for today       | null
         GET     |       tasks/completed      |  Get all users completed tasks       | null
+        GET     |       tasks/{task}         |  Find task by id                       | body,task_start_date,priority,is_completed,task_end_date
         POST    |       tasks                |  Create a task                       | body,task_start_date,priority,is_completed,task_end_date
-        POST    |       tasks/{task}         |  Update a Task                       | body,task_start_date,priority,is_completed,task_end_date
+        PUT     |       tasks/{task}         |  Update a Task                       | body,task_start_date,priority,is_completed,task_end_date
+        PUT     |       tasks/{task}/project/{project} | move task into project     | null
         POST    |       tasks/{task}/mark    |  mark a task as completed (when called again it unmarks the task as completed ) | null
         DELETE  |       tasks/{task}         |  Delete a task                       | null
+
+
+    Sub Tasks Endpoints
+        POST    |       sub-tasks                |  Create a sub-task                       | body,task_start_date,priority,is_completed,task_end_date
+        GET     |       sub-tasks/{task}         |  Find a sub-Task by id                      | body,task_start_date,priority,is_completed,task_end_date
+        PUT     |       sub-tasks/{task}         |  Update a sub-Task                       | body,task_start_date,priority,is_completed,task_end_date
+        POST    |       sub-tasks/{task}/mark    |  mark a sub-task as completed (when called again it unmarks the task as completed ) | null
+        DELETE  |       sub-tasks/{task}         |  Delete a sub-task                       | null
+
+
+    Project Endpoints 
+        POST    |       projects            |   create a project            | name
+        GET     |       projects/user       |   fetch User Projects         | null
+        GET     |       projects/{project}  |   find by id                  | null
+        PUT     |       projects/{project}  |   update                      | name
+        DELETE  |       projects/{project}  |   delete project              | name
+        DELETE  |       projects/{project}/user/{user}  |   Remove user from a project  | null
+
+    Invitation Endpoints
+        POST    |       invitation/{project}    |   send invitation from a particular project to a users email (registered or unregistered)   | email
+        POST    |       invitation/{invitation}/resend  |   resend a pending invitation |   null
+        POST    |       invitation/{invitation}/respond |   respond to the invitation   |   token, decision('accept' or 'deny')
+        DELETE  |       invitation/{invitation}     |   Delete pending invitation   | null
+
 
