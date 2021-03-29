@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Project;
-use App\Models\Task;
+use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TaskPolicy
+class InvitationPolicy
 {
     use HandlesAuthorization;
 
@@ -26,10 +25,10 @@ class TaskPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Invitation  $invitation
      * @return mixed
      */
-    public function view(User $user, Task $task)
+    public function view(User $user, Invitation $invitation)
     {
         //
     }
@@ -49,40 +48,44 @@ class TaskPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Invitation  $invitation
      * @return mixed
      */
-    public function update(User $user, Task $task)
+    public function update(User $user, Invitation $invitation)
     {
-        return $task->user_id == $user->id;
-    }
-
-    public function moveTask(User $user, Task $task, Project $project)
-    {
-        //checks if auth user is d task owner and if the auth user belongs to the project being accessed
-        return $task->user_id == $user->id && $project->hasUser($user);
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Invitation  $invitation
      * @return mixed
      */
-    public function delete(User $user, Task $task)
+    public function delete(User $user, Invitation $invitation)
     {
-        return $task->user_id == $user->id;
+        return $user->id == $invitation->sender_id;
+    }
+
+    public function resend(User $user, Invitation $invitation)
+    {
+        return $user->id == $invitation->sender_id;
+    }
+
+    public function respond(User $user, Invitation $invitation)
+    {
+        return $user->email == $invitation->recipient_email;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Invitation  $invitation
      * @return mixed
      */
-    public function restore(User $user, Task $task)
+    public function restore(User $user, Invitation $invitation)
     {
         //
     }
@@ -91,10 +94,10 @@ class TaskPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Task  $task
+     * @param  \App\Models\Invitation  $invitation
      * @return mixed
      */
-    public function forceDelete(User $user, Task $task)
+    public function forceDelete(User $user, Invitation $invitation)
     {
         //
     }

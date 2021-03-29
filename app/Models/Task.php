@@ -12,6 +12,7 @@ class Task extends Model
 
     protected $fillable = [
         'user_id',
+        'project_id',
         'body',
         'is_completed',
         'priority',
@@ -27,6 +28,11 @@ class Task extends Model
     public function subTasks()
     {
         return $this->hasMany(SubTask::class);
+    }
+
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
     }
 
     public function getTodaysTasks()

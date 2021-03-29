@@ -61,6 +61,26 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Task::class);
     }
 
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class)->withTimestamps();
+    }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class, 'recipient_email', 'email');
+    }
+
+
+    public function ownedProjects()
+    {
+        return $this->projects()->where('owner_id', $this->id);
+    }
+
+    public function isOwnerOfProject($project)
+    {
+        return (bool)$this->projects()->where('id', $project->id)->where('owner_id', $this->id)->count();
+    }
 
 
 

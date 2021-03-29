@@ -58,6 +58,11 @@ abstract class BaseRepository implements IBase, ICriteria
         return $record->delete();
     }
 
+    public function removeUserFromProject($project, $user_id)
+    {
+        $project->members()->detach($user_id);
+    }
+
     public function withCriteria(...$criteria)
     {
         $criteria = Arr::flatten($criteria);

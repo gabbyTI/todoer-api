@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Task;
 use App\Helpers\ApiResponder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TaskResource;
+use App\Models\Project;
 use App\Models\Task;
 use App\Repositories\Contracts\ITask;
+use App\Repositories\Eloquent\Criteria\ForUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -22,7 +24,9 @@ class TaskController extends Controller
 
     public function index()
     {
-        $tasks =  $this->tasks->getUserTasks();
+        $tasks =  $this->tasks->withCriteria([
+            new ForUser(auth()->id())
+        ])->all();
 
         return ApiResponder::successResponse('Data Found', TaskResource::collection($tasks));
     }
@@ -79,7 +83,8 @@ class TaskController extends Controller
         $request->validate([
             'body' => ['required'],
             'task_start_date' => ['required'],
-            'priority' => ['required', 'max:1']
+            'priority' => ['required', 'max:1'],
+            'project' => ['required_if:assign_to_project,true'],
         ]);
 
         $task = $this->tasks->update($task->id, [
@@ -89,7 +94,24 @@ class TaskController extends Controller
             'task_end_date' => $request->task_end_date
         ]);
 
+        $task = $this->tasks->find($task->id);
+
+
         return ApiResponder::successResponse("Task Updated", new TaskResource($task));
+    }
+
+    public function moveTaskToProject(Task $task, Project $project)
+    {
+        // you cannot move a task you don't own and you cannot move a task to a project you do not belong to
+        $this->authorize('moveTask', [$task, $project]);
+
+        $task = $this->tasks->update($task->id, [
+            'project_id' => $project->id
+        ]);
+
+        $task = $this->tasks->find($task->id);
+
+        return ApiResponder::successResponse("Task Moved to " . $project->name, new TaskResource($task));
     }
 
     public function markTaskAsCompleted(Request $request, Task $task)

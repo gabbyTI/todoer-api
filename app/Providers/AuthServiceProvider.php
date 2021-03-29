@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Invitation;
+use App\Models\Project;
 use App\Models\SubTask;
 use App\Models\Task;
+use App\Policies\InvitationPolicy;
+use App\Policies\ProjectPolicy;
 use App\Policies\SubTaskPolicy;
 use App\Policies\TaskPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -20,6 +24,8 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
         Task::class => TaskPolicy::class,
         SubTask::class => SubTaskPolicy::class,
+        Project::class => ProjectPolicy::class,
+        Invitation::class => InvitationPolicy::class,
     ];
 
     /**
