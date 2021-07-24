@@ -22,6 +22,8 @@ class UserResource extends JsonResource
                 'creadted_at_human' => $this->created_at->diffForHumans(),
                 'creadted_at' => $this->created_at,
             ],
+            'projects' => ProjectResource::collection($this->whenLoaded('projects')),
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks'))
         ];
     }
 }

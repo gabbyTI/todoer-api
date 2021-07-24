@@ -8,6 +8,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
 use App\Repositories\Contracts\ITask;
+use App\Repositories\Eloquent\Criteria\EagerLoad;
 use App\Repositories\Eloquent\Criteria\ForUser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,7 +26,8 @@ class TaskController extends Controller
     public function index()
     {
         $tasks =  $this->tasks->withCriteria([
-            new ForUser(auth()->id())
+            new ForUser(auth()->id()),
+            new EagerLoad(['subTasks']),
         ])->all();
 
         return ApiResponder::successResponse('Data Found', TaskResource::collection($tasks));
@@ -34,7 +36,10 @@ class TaskController extends Controller
     public function findById(Task $task)
     {
         // dd($task);
-        // $task = $this->tasks->findById($task->id);
+        $task = $this->tasks->withCriteria([
+            new ForUser(auth()->id()),
+            // new EagerLoad(['subTasks']),
+        ])->find($task->id);
         return ApiResponder::successResponse("Data Found", new TaskResource($task));
     }
 

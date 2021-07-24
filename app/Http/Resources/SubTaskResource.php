@@ -16,7 +16,8 @@ class SubTaskResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'task_id' => $this->task_id,
+            // 'task_id' => $this->task_id,
+            'task' => new TaskResource($this->whenLoaded('task')),
             'body' => $this->body,
             'priority' => $this->priority,
             'is_completed' => $this->is_completed,

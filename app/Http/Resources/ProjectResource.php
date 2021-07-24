@@ -27,9 +27,9 @@ class ProjectResource extends JsonResource
                 "updated_at_human" => $this->updated_at->diffForHumans(),
                 "updated_at" => $this->updated_at,
             ],
-            'tasks' => TaskResource::collection($this->tasks),
-            'owner' => new UserResource($this->owner),
-            'members' => UserResource::collection($this->members),
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
+            'owner' => new UserResource($this->whenLoaded('owner')),
+            'members' => UserResource::collection($this->whenLoaded('members')),
         ];
     }
 }
