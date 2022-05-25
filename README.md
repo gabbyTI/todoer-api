@@ -1,54 +1,66 @@
+# The Todoer API
+
 This API exposes endpoints for a Todo Task recorder application. The features of this application are as follows: `User Authentication`, `Tasks`, `Sub-Tasks`, `Projects`, `Invitation`.
 
-## Postman Documentaion
+-   [Dependencies](#dependencies)
+-   [Initial Setup](#initial-setup)
+-   [Running Locally](#running-locally)
+-   [Running database migrations](#running-database-migrations)
+-   [API Documentation](#api-documentation)
+-   [Emails](#emails)
 
-Read the postman documentation here: [API DOCUMENTATION](https://documenter.getpostman.com/view/9638778/Uz59NzKQ)
+## Dependencies
 
-## Endpoints
+Before you get started, you need to install
 
-    ROUTE | ENDPOINT | DESCRIPTION | REQUEST BODY
-    GET | Me | Returns the user data of currently logged in user(returns null if no user is logged in)  |   null
-    Authentication Endpoints
-        POST    |    register        |   Register a user(email verification link will be sent to user on registeration)  |   name,email,password,password_confirmation
-        POST    |    verification/verify/{user}  | Email verification link with parameter(token & expires)   |   email
-        POST    |    verification/resend     | Resend Email verification link    |   email
-        POST    |    login   | Login a user (every user is assigned a bearer token which is used to send requests) | email,password
-        POST    |    password/email  |   Send password reset link to user (for Forgot Password feature)  |   email
-        POST    |    password/reset  |   password reset link |   token, email, password, password_confirmation
-        POST    |    logout  |   Logout  | null
-        POST    |    account/delete  |   delete profile from database    |   null
+[Docker Desktop](https://www.docker.com/products/docker-desktop).
 
-    Task Endpoints
+[Composer](https://getcomposer.org/download/).
 
-        GET     |       tasks                |  Get all users tasks                 | null
-        GET     |       tasks/today          |  Get all users tasks for today       | null
-        GET     |       tasks/completed      |  Get all users completed tasks       | null
-        GET     |       tasks/{task}         |  Find task by id                       | body,task_start_date,priority,is_completed,task_end_date
-        POST    |       tasks                |  Create a task                       | body,task_start_date,priority,is_completed,task_end_date
-        PUT     |       tasks/{task}         |  Update a Task                       | body,task_start_date,priority,is_completed,task_end_date
-        PUT     |       tasks/{task}/project/{project} | move task into project     | null
-        POST    |       tasks/{task}/mark    |  mark a task as completed (when called again it unmarks the task as completed ) | null
-        DELETE  |       tasks/{task}         |  Delete a task                       | null
+## Initial Setup
 
+Clone the project from github by running the following command
 
-    Sub Tasks Endpoints
-        POST    |       sub-tasks                |  Create a sub-task                       | body,task_start_date,priority,is_completed,task_end_date
-        GET     |       sub-tasks/{task}         |  Find a sub-Task by id                      | body,task_start_date,priority,is_completed,task_end_date
-        PUT     |       sub-tasks/{task}         |  Update a sub-Task                       | body,task_start_date,priority,is_completed,task_end_date
-        POST    |       sub-tasks/{task}/mark    |  mark a sub-task as completed (when called again it unmarks the task as completed ) | null
-        DELETE  |       sub-tasks/{task}         |  Delete a sub-task                       | null
+```
+git clone https://github.com/gabbyTI/todoer-api.git
+```
 
+## Running Locally
 
-    Project Endpoints
-        POST    |       projects            |   create a project            | name
-        GET     |       projects/user       |   fetch User Projects         | null
-        GET     |       projects/{project}  |   find by id                  | null
-        PUT     |       projects/{project}  |   update                      | name
-        DELETE  |       projects/{project}  |   delete project              | name
-        DELETE  |       projects/{project}/user/{user}  |   Remove user from a project  | null
+From inside the `todoer-api` folder run the following command.
 
-    Invitation Endpoints
-        POST    |       invitation/{project}    |   send invitation from a particular project to a users email (registered or unregistered)   | email
-        POST    |       invitation/{invitation}/resend  |   resend a pending invitation |   null
-        POST    |       invitation/{invitation}/respond |   respond to the invitation   |   token, decision('accept' or 'deny')
-        DELETE  |       invitation/{invitation}     |   Delete pending invitation   | null
+```
+composer run project-setup-development
+```
+
+Now, to run the project in a docker environment, run the following command.
+
+```
+docker-compose up -d
+```
+
+The first time you run the above command it takes a few minutes, but subsequent runs are quick.
+
+Once the application's Docker containers have been started, you can access the application in your web browser at: [http://localhost:5055](http://localhost:6066).
+
+## Running database migrations
+
+Before running the migrations, make sure you have started the docker container by running the command in the previous step.
+
+To run the migrations, run the following command.
+
+```
+docker exec todoer-php php artisan migrate
+```
+
+## API Documentation
+
+View the API documentation in [Postman API Doc](https://documenter.getpostman.com/view/9638778/Uz59NzKQ).
+
+## Emails
+
+View emails on mailhog here: [http://localhost:8025](http://localhost:8025).
+
+## PhpMyAdmin
+
+View the database with phpmyadmin dashboard: [http://localhost:8081](http://localhost:8081)
