@@ -66,7 +66,7 @@ class LoginController extends Controller
         $user = $this->guard()->user();
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
-            return ApiResponder::failureResponse("You need to verify your email account", 422);
+            return ApiResponder::failureResponse("You need to verify your email account", 401);
         }
 
         return ApiResponder::failureResponse("Invalid login credentials", 422);
@@ -76,7 +76,7 @@ class LoginController extends Controller
     {
         $user = $this->guard()->logout();
 
-        return ApiResponder::successResponse("Logged out successfully");
+        return ApiResponder::successResponse("Logged out successfully", null, 204);
     }
 
     public function deleteAccount()

@@ -8,6 +8,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof NotFoundHttpException && $request->expectsJson()) {
+            return ApiResponder::failureResponse("Route Not Found", 404);
+        }
+
         if ($exception instanceof AuthorizationException && $request->expectsJson()) {
             return ApiResponder::failureResponse("You are not authorized to access this resource", 403);
         }
@@ -67,7 +72,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof ValidationException && $request->expectsJson()) {
 
-            return ApiResponder::failureResponse($exception->getMessage(),  $exception->status, $this->transformErrors($exception));
+            return ApiResponder::failureResponse($exception->getMessage(),  $exception->status, $exception->errors());
             // return ApiResponder::failureResponse($exception->getMessage(),  $exception->status, $this->transformErrors($exception));
         }
 

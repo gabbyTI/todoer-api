@@ -84,7 +84,7 @@ class InvitationController extends Controller
         ]);
 
         $token = $request->token;
-        $decision = $request->decision; // accept or deny
+        $decision = $request->decision; // accept or reject
 
         // check if invitation belongs to them
 
@@ -96,7 +96,7 @@ class InvitationController extends Controller
             return ApiResponder::failureResponse("Invalid Token", 401);
         }
 
-        if ($decision != 'deny') {
+        if ($decision != 'reject') {
             $this->invitations->addUserToProject($invitation->project, auth()->id());
         }
 

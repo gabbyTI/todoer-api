@@ -30,7 +30,7 @@ class SubTaskPolicy
      */
     public function view(User $user, SubTask $subTask)
     {
-        //
+        return $subTask->task->user_id === $user->id;
     }
 
     /**
@@ -53,7 +53,7 @@ class SubTaskPolicy
      */
     public function update(User $user, SubTask $subTask)
     {
-        return $subTask->task->user_id == $user->id;
+        return $subTask->task->user_id === $user->id;
     }
 
     /**

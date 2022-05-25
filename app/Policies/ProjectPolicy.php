@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,7 +31,7 @@ class ProjectPolicy
      */
     public function view(User $user, Project $project)
     {
-        //
+        return $user->isOwnerOfProject($project);
     }
 
     /**
@@ -53,8 +54,8 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project)
     {
-        return true;
-        // return $user->isOwnerOfProject($project);
+        // return true;
+        return $user->isOwnerOfProject($project);
     }
 
     /**
@@ -68,6 +69,20 @@ class ProjectPolicy
     {
         return $user->isOwnerOfProject($project);
     }
+
+
+    public function move(User $user, Project $project, Task $task)
+    {
+        //checks if auth user is d task owner and if the auth user belongs to the project being accessed
+        return $task->user_id == $user->id && $project->hasUser($user);
+    }
+
+    public function removeUser(User $user, Project $project)
+    {
+        //checks if auth user is d task owner and if the auth user belongs to the project being accessed
+        return $user->isOwnerOfProject($project);
+    }
+
 
     /**
      * Determine whether the user can restore the model.

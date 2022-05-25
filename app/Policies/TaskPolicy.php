@@ -31,7 +31,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        //
+        return $task->user_id == $user->id;
     }
 
     /**
@@ -55,12 +55,6 @@ class TaskPolicy
     public function update(User $user, Task $task)
     {
         return $task->user_id == $user->id;
-    }
-
-    public function moveTask(User $user, Task $task, Project $project)
-    {
-        //checks if auth user is d task owner and if the auth user belongs to the project being accessed
-        return $task->user_id == $user->id && $project->hasUser($user);
     }
 
     /**

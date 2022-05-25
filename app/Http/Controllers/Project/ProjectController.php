@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Project;
 use App\Helpers\ApiResponder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use App\Repositories\Contracts\IProject;
+use App\Repositories\Contracts\ITask;
 use App\Repositories\Contracts\IUser;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
 use App\Repositories\Eloquent\Criteria\ForUser;
@@ -17,10 +20,12 @@ use Illuminate\Support\Str;
 class ProjectController extends Controller
 {
     protected $projects;
+    protected $tasks;
 
-    public function __construct(IProject $projects)
+    public function __construct(IProject $projects, ITask $tasks)
     {
         $this->projects = $projects;
+        $this->tasks = $tasks;
     }
 
     /**
@@ -75,6 +80,8 @@ class ProjectController extends Controller
 
     public function findById(Request $request, Project $project)
     {
+        $this->authorize('view', $project);
+
         return ApiResponder::successResponse("Data found", new ProjectResource($project));
     }
 
@@ -86,20 +93,35 @@ class ProjectController extends Controller
     {
         $this->authorize('delete', $project);
 
-        $project->delete($project->id);
+        $this->projects->delete($project->id);
 
         return ApiResponder::successResponse("Project Deleted");
     }
 
-    public function removeFromProject(Project $project, User $user)
+    public function moveTaskToProject(Project $project, Task $task)
+    {
+        // dd([$task, $project]);
+        // you cannot move a task you don't own and you cannot move a task to a project you do not belong to
+        $this->authorize('move', [$project, $task]);
+
+        $task = $this->tasks->update($task->id, [
+            'project_id' => $project->id
+        ]);
+
+        $task = $this->tasks->find($task->id);
+
+        return ApiResponder::successResponse("Task Moved to " . $project->name, new TaskResource($task));
+    }
+
+
+    public function removeUserFromProject(Project $project, User $user)
     {
         // you cannot remove a user from a project you dont own
-        if (!auth()->user()->isOwnerOfProject($project) && auth()->id() != $user->id) {
-            return ApiResponder::failureResponse("You cannot do this", 401);
-        }
+        $this->authorize('removeUser', $project);
+
 
         if ($user->isOwnerOfProject($project)) {
-            return ApiResponder::failureResponse("This is the project owner", 401);
+            return ApiResponder::failureResponse("You cannot remove yourself", 401);
         }
 
         if (!$project->hasUser($user)) {

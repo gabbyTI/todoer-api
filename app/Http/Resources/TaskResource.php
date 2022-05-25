@@ -18,7 +18,7 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'body' => $this->body,
             'priority' => $this->priority,
-            'is_completed' => $this->is_completed,
+            'is_completed' => $this->is_completed ? true : false,
             'task_start_date' => $this->task_start_date,
             'task_end_date' => $this->task_end_date,
             'sub_task_count' => $this->subTasks->count(),

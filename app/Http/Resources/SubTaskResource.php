@@ -20,7 +20,7 @@ class SubTaskResource extends JsonResource
             'task' => new TaskResource($this->whenLoaded('task')),
             'body' => $this->body,
             'priority' => $this->priority,
-            'is_completed' => $this->is_completed,
+            'is_completed' => $this->is_completed ? true : false,
             'task_date' => $this->task_date,
         ];
     }

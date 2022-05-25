@@ -12,8 +12,8 @@ class sendInvitationToJoinProject extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $invitation;
-    public $user_exists;
+    protected $invitation;
+    protected $user_exists;
     /**
      * Create a new message instance.
      *
@@ -33,7 +33,7 @@ class sendInvitationToJoinProject extends Mailable
     public function build()
     {
         if ($this->user_exists) {
-            $url = config('app.client_url') . '/settings/project';
+            $url = config('app.client_url') . '/settings/project/' . $this->invitation->token;
             return $this->markdown('emails.invitations.invite-existing-user')
                 ->subject('You have been added to ' . $this->invitation->project->name . ' on Todoer')
                 ->with([

@@ -22,7 +22,7 @@ class SubTaskController extends Controller
     public function store(Request $request, Task $task)
     {
         $request->validate([
-            'body' => ['required'],
+            'body' => ['required', 'string'],
         ]);
 
         $subTask = $this->subTasks->create([
@@ -44,12 +44,12 @@ class SubTaskController extends Controller
         $this->authorize('update', $subTask);
 
         $request->validate([
-            'body' => ['required'],
+            'body' => ['required', 'string'],
         ]);
 
         $subTask = $this->subTasks->update($subTask->id, [
             'body' => $request->body,
-            'priority' => $request->priority,
+            'priority' => $request->priority == null ? $subTask->priority : $request->priority,
             'task_date' => $request->task_date,
         ]);
 
@@ -60,6 +60,8 @@ class SubTaskController extends Controller
 
     public function findById(SubTask $subTask)
     {
+        $this->authorize('view', $subTask);
+
         return ApiResponder::successResponse("Data Found", new SubTaskResource($subTask));
     }
 

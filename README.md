@@ -1,4 +1,11 @@
+This API exposes endpoints for a Todo Task recorder application. The features of this application are as follows: `User Authentication`, `Tasks`, `Sub-Tasks`, `Projects`, `Invitation`.
+
+## Postman Documentaion
+
+Read the postman documentation here: [API DOCUMENTATION](https://documenter.getpostman.com/view/9638778/Uz59NzKQ)
+
 ## Endpoints
+
     ROUTE | ENDPOINT | DESCRIPTION | REQUEST BODY
     GET | Me | Returns the user data of currently logged in user(returns null if no user is logged in)  |   null
     Authentication Endpoints
@@ -12,7 +19,7 @@
         POST    |    account/delete  |   delete profile from database    |   null
 
     Task Endpoints
-                       
+
         GET     |       tasks                |  Get all users tasks                 | null
         GET     |       tasks/today          |  Get all users tasks for today       | null
         GET     |       tasks/completed      |  Get all users completed tasks       | null
@@ -32,7 +39,7 @@
         DELETE  |       sub-tasks/{task}         |  Delete a sub-task                       | null
 
 
-    Project Endpoints 
+    Project Endpoints
         POST    |       projects            |   create a project            | name
         GET     |       projects/user       |   fetch User Projects         | null
         GET     |       projects/{project}  |   find by id                  | null
@@ -45,5 +52,3 @@
         POST    |       invitation/{invitation}/resend  |   resend a pending invitation |   null
         POST    |       invitation/{invitation}/respond |   respond to the invitation   |   token, decision('accept' or 'deny')
         DELETE  |       invitation/{invitation}     |   Delete pending invitation   | null
-
-

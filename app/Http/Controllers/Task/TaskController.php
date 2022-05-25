@@ -35,11 +35,8 @@ class TaskController extends Controller
 
     public function findById(Task $task)
     {
-        // dd($task);
-        $task = $this->tasks->withCriteria([
-            new ForUser(auth()->id()),
-            // new EagerLoad(['subTasks']),
-        ])->find($task->id);
+        $this->authorize('view', $task);
+
         return ApiResponder::successResponse("Data Found", new TaskResource($task));
     }
 
@@ -61,7 +58,7 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'body' => ['required'],
+            'body' => ['required', 'string'],
             'task_start_date' => ['required'],
             'priority' => ['required', 'max:1']
         ]);
@@ -86,7 +83,7 @@ class TaskController extends Controller
         $this->authorize('update', $task);
 
         $request->validate([
-            'body' => ['required'],
+            'body' => ['required', 'string'],
             'task_start_date' => ['required'],
             'priority' => ['required', 'max:1'],
             'project' => ['required_if:assign_to_project,true'],
@@ -103,20 +100,6 @@ class TaskController extends Controller
 
 
         return ApiResponder::successResponse("Task Updated", new TaskResource($task));
-    }
-
-    public function moveTaskToProject(Task $task, Project $project)
-    {
-        // you cannot move a task you don't own and you cannot move a task to a project you do not belong to
-        $this->authorize('moveTask', [$task, $project]);
-
-        $task = $this->tasks->update($task->id, [
-            'project_id' => $project->id
-        ]);
-
-        $task = $this->tasks->find($task->id);
-
-        return ApiResponder::successResponse("Task Moved to " . $project->name, new TaskResource($task));
     }
 
     public function markTaskAsCompleted(Request $request, Task $task)

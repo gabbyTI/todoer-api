@@ -29,7 +29,7 @@ class Project extends Model
         });
 
         static::deleted(function ($project) {
-            $project->members->sync([]);
+            $project->members()->sync([]);
         });
     }
 
