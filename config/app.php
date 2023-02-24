@@ -30,6 +30,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application Keys
+    |--------------------------------------------------------------------------
+    |
+    | These are authorized keys that can be used
+    | to access and work with the API.
+    */
+
+    'api_keys' => env('API_KEYS'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Debug Mode
     |--------------------------------------------------------------------------
     |
@@ -38,6 +49,7 @@ return [
     | application. If disabled, a simple generic error page is shown.
     |
     */
+
 
     'debug' => (bool) env('APP_DEBUG', false),
 
