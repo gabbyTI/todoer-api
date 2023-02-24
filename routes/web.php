@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    // return view('welcome');
-    return File::get(public_path() . '/index.html');
+    return view('welcome');
 });
 
-// Auth::routes();
+Route::get('/doc', function () {
+    // return view('welcome');
+    return File::get(public_path() . '/documentation/index.html');
+})->name('documentation');
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
